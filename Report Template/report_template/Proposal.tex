@@ -9,20 +9,20 @@
 
 
 \begin{document}
-\title{Title Goes Here}
+\title{Linux client with WiFi and LTE}
 
 %If you're using runningheads you can add an abreviated title for the running head on odd pages using the following
 %\titlerunning{abreviated title goes here}
 %and an alternative title for the table of contents:
 %\toctitle{table of contents title}
 
-\subtitle{Subtitle Goes Here}
+\subtitle{Project proposal}
 
 %For a single author
 %\author{Author Name}
 
 %For multiple authors:
-\author{Authors} 
+\author{Pascal Maissen, Jovana Micic, Noe Wysshaar} 
 
 
 %If using runnningheads you can abbreviate the author name on even pages:
@@ -34,7 +34,8 @@
 %\institute{Institute Name \email{email address}}
 
 % If authors are from different institutes 
-\institute{University Name \email{email address}}
+\institute{University of Bern\\  \email {pascal.maissen@unifr.ch, jovana.micic@students.unibe.ch, noemathieu.wysshaar@unifr.ch} }
+
 
 %to remove your email just remove '\email{email address}'
 % you can also remove the thanks footnote by removing '\thanks{Thank you to...}'
@@ -46,7 +47,20 @@
 %abstract text goes here - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 %\end{abstract}
 
-\section{Protocol Introduction}
+\section{Project description}
+The task of this project is study of Dynamic Adaptive Streaming over HTTP video delivery in a mobile scenario using WiFi and Long Term Evolution (LTE). Case scenario is that user is connected throught LTE, but periodically gets the internet access throught WiFi. The main goal of this project is to evaluate the quality gain in the parallel LTE/WiFi video transmission in comparasion to a single LTE transmission using multi-path TCP (MPTCP). 
+
+
+\section{Roadmap of project}
+Idea is to study the topic using MPTCP on Linux. User equipment (UE) will be connected to LTE and it will periodically get access to WiFi. First step will be establishing experimental setup on several laptops and PCs. Then we will start downloading video from some video server using only LTE. While the video is downloading, we will turn on and off WiFi. When WiFi access point is on we expect better experience in comparasion to LTE.  In next steps we will study quality gain in different scenarios. 
+
+
+\section{Explanation of concepts}
+\textbf{Long Term Evolution (LTE)} is standard for high-speed wireless communication for mobile devices. It increases capacity and speed using new digital signal processing techniques. It reperesents 4th generation technology. \\  \\
+\textbf{Wireless fidelity (WiFi)} is technology for wireless local area networking (WLAN) with devices based on the IEEE 802.11 standards. Devices compatible with WiFi can connect to the Internet using WLAN and a wireless access point. Access points have range of about 20 meters indoors. \\ \\
+\textbf{Dynamic Adaptive Streaming over HTTP (DASH) } is streaming technique that enables high quality streaming of media content over the Internet. Client automatically select the next segment to download based on current network conditions. It can adapt to chaning network conditions.\\  \\
+\textbf{Multi-path TCP (MPTCP)} is solution that allows applications to use multiple paths for streaming. This feauture is common on today's laptops and smartphones. Using MPTCP dramatically improve Quality of Experience of video streaming. Streaming video over MPTCP may incur undesired network usage. 
+
 
 
 %The bibliography, done here without a bib file
@@ -63,9 +77,12 @@
 \begin{thebibliography}{1}
 %add each reference in here like this:
 \bibitem[RE1]{reference1}
-Author:
-Article/Book:
-Other info: (date) page numbers.
+Bo Han, Feng Qian, Lusheng Ji, and Vijay Gopalakrishnan. 2016. MP-DASH: Adaptive Video Streaming Over Preference-Aware Multipath. In Proceedings of the 12th International on Conference on Emerging Networking EXperiments and Technologies (CoNEXT ’16). ACM, New York, NY, USA, 129–143.
+
+\bibitem[RE2]{reference2}
+Thomas Stockhammer. 2011. Dynamic Adaptive Streaming over HTTP – Design Principles and Standards. MMSys '11 Proceedings of the second annual ACM conference on Multimedia systems. San Jose, CA, USA .133-144.
+
+
 \end{thebibliography}
 
 \end{document}
