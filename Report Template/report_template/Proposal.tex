@@ -48,7 +48,13 @@
 %\end{abstract}
 
 \section{Project description}
-The task of this project is study of Dynamic Adaptive Streaming over HTTP video delivery in a mobile scenario using WiFi and Long Term Evolution (LTE). Case scenario is that the user is connected through LTE, but periodically gets the internet access through WiFi. The main goal of this project is to evaluate the quality gain in the parallel LTE/WiFi video transmission in comparison to a single LTE transmission using multi-path TCP (MPTCP). 
+The task of this project is study of Dynamic Adaptive Streaming over HTTP video delivery in a mobile scenario using WiFi and Long Term Evolution (LTE). Case scenario is that the user is connected through LTE, but periodically gets the internet access through WiFi. The main goal of this project is to evaluate the quality gain in the parallel LTE/WiFi video transmission in comparison to a single LTE transmission using multi-path TCP (MPTCP).\\ \\
+\textbf{Key Performance Indicators (KPIs)} will be the following:
+\begin{itemize}
+\item \textbf{Bit Rate:} Measuring the bitrate differences on LTE vs. LTE and WiFi to define quality of the video stream.
+\item \textbf{Buffering:} How big needs the buffer to be to ensure no waiting time for loading the video. Fill the buffer up when WiFi is available.
+\item \textbf{Lag:} Keeping the lag at a minimum, especially when streaming a live event where the buffer should be small to reduce overall lag.
+\end{itemize}
 
 
 \section{Roadmap of project}
@@ -61,6 +67,19 @@ Idea is to study the topic using MPTCP on Linux. User equipment (UE) will be con
 \textbf{Dynamic Adaptive Streaming over HTTP (DASH) } is streaming technique that enables high quality streaming of media content over the Internet. Client automatically selects the next segment to download based on current network conditions. It can adapt to changing network conditions.\\  \\
 \textbf{Multi-path TCP (MPTCP)} is solution that allows applications to use multiple paths for streaming. This feature is common on today's laptops and smartphones. Using MPTCP dramatically improves Quality of Experience of video streaming. Streaming video over MPTCP may incur undesired network usage. 
 
+\section{Milestones}
+\begin{center}
+\begin{tabular}{ | r | l |} \hline
+March 2018 & Start of project \\ \hline
+Early April 2018 & Implementation \& first draft version of report \\ \hline
+Late April 2018 & Finishing implementation \\ \hline
+30. April 2018 & Midterm presentation \\ \hline
+Early May 2018 & Evaluation \& Analysis of results, writing report \\ \hline
+Late May 2018 & Finishing up \\ \hline
+28. May 2018 & Final project presentation \\ \hline
+
+\end{tabular}
+\end{center}
 
 
 %The bibliography, done here without a bib file
