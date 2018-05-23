@@ -54,7 +54,7 @@ In the first part of our experiment we just tested throughput of the data withou
 \item{WiFi was turned off and LTE was on. WiFi was turned on after 10 seconds.}
 \end{enumerate}
 
-In the second part of our experiment we wanted to test data throughput in a scenario when user is watching a video content from the Internet. As the video content we used a datasets  \cite{dataset} provided by Insititute for Information Technology from University in Klagenfurt, Austria. It contains already prepared DASH configured videos. As the player for the video streaming we used VLC player. VLC media player is a free and open-source, portable, cross-platform media player and streaming media server developed by the VideoLAN project. We used version 2.1.0 for Windows platform \cite{VLC}. 
+In the second part of our experiment we wanted to test data throughput in a scenario when user is watching a video content from the Internet. As the video content we used videos from the dataset  \cite{dataset} provided by Insititute for Information Technology from University in Klagenfurt, Austria. It contains already prepared DASH configured videos. Videos in the dataset have different duration, from 10 to 90 minutes and different segment lengths, from 1 to 15 seconds. They come from different genres such as sport, animation and movie. All of them have almost HD quality (1080p).  For playing video streaming we used VLC player. VLC media player is a free and open-source, portable, cross-platform media player and streaming media server developed by the VideoLAN project. We used version 2.1.0 for Windows platform \cite{VLC}. 
 
 %Analyze your data with respect to the aim of the experiment. Your task during the experiment is not just to measure and document your measurements, but to derive and present conclusions from your measurements. If there are some errors in the final results. Investigate and try to understand all types and sources of errors in all your measurements.
 \section{Results and Analsys}
@@ -62,7 +62,7 @@ As it was mentioned in the previous section, for the first part of the project w
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.0\textwidth]{result1.png}
+\includegraphics[width=0.8\textwidth]{result1.png}
 \caption{\label{fig:r1} Graphic representing the MPTCP throughput when WiFi is turned off after 10 sec.}
 \end{figure}
 
@@ -70,7 +70,7 @@ In the figure \ref{fig:r1} is presented throughput in the scenario when we have 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.0\textwidth]{result2.png}
+\includegraphics[width=0.8\textwidth]{result2.png}
 \caption{\label{fig:r2} Graphic representing the MPTCP throughput when WiFi is turned on after 10 sec.}
 \end{figure}
 
@@ -83,6 +83,8 @@ The interesting observation from both graphics is that in the moment when the Wi
 %Summarize and discuss your results with respect to the literature or your own scientific expectations. You should in particular discuss possible error sources and give a short judgment on the quality of the experimental setup (because you also learn to design the measurement setups). If needed, suggest how to improve the setups.
 \section{Conclusions}
 After running the several experiments of our setup, we can conclude that combination of Multipath TCP and DASH improves data throughput and Quality of Experience in video streaming as it was expected. We would like to mention that documentation and tutorials for setting up MPTCP Linux Kernel \cite{linuxMPTCP} are very poor and not very helpful. Because of that we are very thankful to Dr. Eryk Schiller for helping us with setting everything up. 
+
+Conclusions about DASH are the following. Shorter segments may provide a larger overhead in term of requests and result in more quality switches, with the cost of a lower encoding efficiency. On the other hand longer segments are not very handy in environments with high bandwidth fluctuations like mobile networks, because the client cannot adjust the video stream as fast as it would be needed in case of a significant bandwidth drop.
 
 
 %The bibliography, done here without a bib file
@@ -100,7 +102,7 @@ Michalos, M. G., S. P. Kessanidis, and S. L. Nalmpantis. \emph{"Dynamic Adaptive
 C. Paasch, S. Barre, et al.. \emph{Multipath TCP in the Linux Kernel}. Available from \url{http://www.multipath-tcp.org}.
 
 \bibitem{dataset}
-\emph{DASH dataset}. Available from \url{www-itec.uni-klu.ac.at/ftp/datasets/mmsys12/}.
+Stefan Lederer, Christopher Müller and Christian Timmerer, \emph{“Dynamic Adaptive Streaming over HTTP Dataset”}, In Proceedings of the ACM Multimedia Systems Conference 2012, Chapel Hill, North Carolina, February 22-24 (2012). 
 
 \bibitem{VLC}
 \emph{VLC player}. Available from \url{download.videolan.org/pub/videolan/vlc/2.1.0/}.
