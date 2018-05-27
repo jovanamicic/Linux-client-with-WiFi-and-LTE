@@ -42,9 +42,18 @@ In the figure \ref{fig:dash} is presented concept of DASH. This concept is consi
 
 %The experimental setup, the differences of the experimental series, the different parameters used.
 \section{Experimental setup}
-HERE DESCRIBE SETUP FROM ERYKS OFFICE.
+For MPTCP to work we needed to install the MPTCP kernel \cite{linuxMPTCP}.
+We downloaded, compiled and installed the kernel on two linux machines. One later acting as client and the other one as server. The setup is illustrated on figure \ref{fig:setup}.\\
 
-DONT FORGET THIS: In our project we used Linux kernel implementation of MPTCP \cite{linuxMPTCP}. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{setup.png}
+\caption{\label{fig:setup} Hardware setup used for the experiments.}
+\end{figure}
+
+Both computers needed at least two network interfaces. The client was equipped with a wireless network card for the WiFi connection and for the connection over LTE we used a USB dongle. On the serverside a custom WiFi access point was created with the help of hostapd \footnote{hostapd \url{http://w1.fi/hostapd/}}. to which the client connected. In addition, the server needs to be connected with an LTE antenna. To our luck this computer was already set up for this task and had all necessary LTE components such as the Home Subscriber Server (HSS), Mobility Management Entity (MME), Serving Gateway (S-GW) and PDN Gateway (P-GW). Among some minor diffuculties regarding the establishment of the LTE connection (presumably
+ due to a poor LTE dongle) everything was set up and ready for testing.\\
 
 In the first part of our experiment we just tested throughput of the data without video streaming. We had two different scenarios:
 
@@ -142,10 +151,16 @@ In the figure \ref{fig:r1} is presented throughput in the scenario when we have 
 In the figure \ref{fig:r2} is presented throughput in the scenario when only LTE is turned on from the beginning of the experiment. After 10 seconds, WiFi is turned on. From the graphic we can see that there is increase of total throughput when WiFi is on. The maximal total throughput achieved in this scenario is around 28 Mbps.
 
 The interesting observation from both graphics is that in the moment when the WiFi is again turned on, we have decrease of the LTE throughput. Reason for this could be specific MPTCP protocol implementation but we can not claim this with great certainty.
+ 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{videotest2.png}
+\caption{\label{fig:videotest2} Throughput of MPTCP over LTE and WiFi.}
+\end{figure} 
+ 
+Figure \ref{fig:videotest2} shows the throughput of both network interfaces during a DASH video streaming test. At the start both interface are active and after 20 seconds WiFi was turned off (to simulate a signal loss) and around 25 seconds later on it was turned back on again. The graph shows a throughput around a relatively constant 3 Mbps. For the WiFi interface the throughput is around 12 Mbps while it is active. Overall this sums up to a total throughput around 15 Mbps.
 
- HERE ADD GRAPHIC OF TEST 2 BECAUSE IT IS MORE PRECISE AND PARAGRAPH DESCRIBING IT
- ...
-\newpage
+%\newpage
 In the following is presented a graphic showing the change of the buffer size during the video streaming. In the figure \ref{fig:buffer2} we can see that at the beginning we are using the lowest representation but after the few seconds we came to the representation 3 because we have WiFi and LTE working in parallel. Significant drop on the graphic is because it is a moment when WiFi was turned off, so it has to adjust to new network conditions and continue playing the lowest representation. After 20 seconds, we again turned on WiFi and we can see that higher representations are used again. 
 
  
@@ -184,8 +199,8 @@ C. Paasch, S. Barre, et al.. \emph{Multipath TCP in the Linux Kernel}. Available
 \bibitem{dataset}
 Stefan Lederer, Christopher Müller and Christian Timmerer, \emph{“Dynamic Adaptive Streaming over HTTP Dataset”}, In Proceedings of the ACM Multimedia Systems Conference 2012, Chapel Hill, North Carolina, February 22-24 (2012). 
 
-\bibitem{VLC}
-\emph{VLC player}. Available from \url{download.videolan.org/pub/videolan/vlc/2.1.0/}.
+%\bibitem{VLC}
+%\emph{VLC player}. Available from \url{download.videolan.org/pub/videolan/vlc/2.1.0/}.
 
 \end{thebibliography}
 
