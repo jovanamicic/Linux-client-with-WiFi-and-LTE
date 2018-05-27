@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{listings}
 
 \begin{document}
 \title{Linux client with WiFi and LTE}
@@ -24,7 +25,7 @@ In order to achieve parallel connection of LTE and WiFi we have to use MPTCP. Mu
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{mptcp.png}
-\caption{\label{fig:mptcp} Difference between TCP and MPTCP}
+\caption{\label{fig:mptcp} Difference between TCP and MPTCP.}
 \end{figure}
 
 In the figure \ref{fig:mptcp} is presented graphic explaining the difference between TCP and MPTCP.  For instance, Alice has a smartphone with 3G and WiFi interfaces and Bob has a computer with an Ethernet interface. In standard TCP, the connection should be established between two IP addresses. An application can only create one TCP connection through a single link. MPTCP allows the connection to use several paths simultaneously. For this, MPTCP creates one TCP connection, subflow, over each path that needs to be used. So in the case from the figure \ref{fig:mptcp},  Alice can use both available links, 3G and WiFi at the same time.
@@ -34,19 +35,17 @@ In our project description it was required to use Dynamic Adaptive Streaming ove
 \begin{figure}[H]
 \centering
 \includegraphics[width=1.0\textwidth]{DASH.png}
-\caption{\label{fig:dash} Concept of Dynamic Adaptive Streaming over HTTP}
+\caption{\label{fig:dash} Concept of Dynamic Adaptive Streaming over HTTP.}
 \end{figure}
 
 In the figure \ref{fig:dash} is presented concept of DASH. This concept is consisting of the three parts. First part is HTTP server with video content of different qualities. Second part is network which has varying bandwidth conditions. Third part is user with device which selects appropriate segments for each timepoint. So the main advantage of using DASH is that is flexible, it dynamically adapts to current network conditions and it reuses existing Internet architecture.
 
 %The experimental setup, the differences of the experimental series, the different parameters used.
 \section{Experimental setup}
-... 
-\\
-In our project we used Linux kernel implementation of MPTCP \cite{linuxMPTCP}. 
-\\
-...
-\\
+HERE DESCRIBE SETUP FROM ERYKS OFFICE.
+
+DONT FORGET THIS: In our project we used Linux kernel implementation of MPTCP \cite{linuxMPTCP}. 
+
 In the first part of our experiment we just tested throughput of the data without video streaming. We had two different scenarios:
 
 \begin{enumerate}
@@ -54,7 +53,73 @@ In the first part of our experiment we just tested throughput of the data withou
 \item{WiFi was turned off and LTE was on. WiFi was turned on after 10 seconds.}
 \end{enumerate}
 
-In the second part of our experiment we wanted to test data throughput in a scenario when user is watching a video content from the Internet. As the video content we used videos from the dataset  \cite{dataset} provided by Insititute for Information Technology from University in Klagenfurt, Austria. It contains already prepared DASH configured videos. Videos in the dataset have different duration, from 10 to 90 minutes and different segment lengths, from 1 to 15 seconds. They come from different genres such as sport, animation and movie. All of them have almost HD quality (1080p).  For playing video streaming we used VLC player. VLC media player is a free and open-source, portable, cross-platform media player and streaming media server developed by the VideoLAN project. We used version 2.1.0 for Windows platform \cite{VLC}. 
+In the second part of our experiment we wanted to test data throughput in a scenario when user is watching a video content from the Internet. So the first step was to find appropriate video which we will stream over the Internet. Appropriate video means that bitrate of the video has to be larger than 25 Mbps because of the  restulst we got in the first experiment. We choose \emph{4K Ultra HD Firework }video\footnote{Firework video \url{http://4ksamples.com/4k-uhd-fireworks-sample/}}. In the table \ref{tab:video} is presented general information about video. 
+
+\begin{table}
+\centering
+\begin{tabular}{l|l}
+Attribute & Value \\\hline
+Format & MPEG-4 \\
+File size & 1.19 GiB \\
+Duration & 1mn 47s \\ 
+Overall bitrate & 95.7 Mbps \\
+Width & 3 840 pixels \\
+Height & 2 160 pixels \\
+Writing library \hspace{10mm}  &  x264 core 114 \\
+\end{tabular}
+\caption{\label{tab:video}General information about video.}
+\end{table}
+
+The next step was to prepare video for DASH streaming. We encoded a video in different qualities to provide multiple representations according to the DASH standard. For transcoding the video to the H.264 standard we used x264 library\footnote{x264 \url{https://www.videolan.org/developers/x264.html}}. This library is a free software library for encoding video streams into the H.264/MPEG-4 AVC compression format. Example of the shell script used for creating video of 5 Mbps bitrate is presented in the following listing.
+
+\begin{lstlisting}[language=bash, caption={\label{l:script}Shell script for encoding the video.}, captionpos=b]
+bitrate=5000
+
+x264 --output intermediate_${bitrate}k.264 --fps 60 --preset
+slow --bitrate $((bitrate)) --vbv-maxrate $((bitrate*2)) 
+--vbv-bufsize $((bitrate*2*2)) --min-keyint 120 --keyint 120 
+--scenecut 0 --no-scenecut --pass 1 
+--video-filter "resize:width=1280,height=720" firework.mp4
+
+MP4Box -add intermediate_${bitrate}k.264 -fps 60
+out_${bitrate}k.mp4 rm intermediate_${bitrate}k.264
+
+\end{lstlisting} 
+
+Output of this script is a raw H.264 video which data is encapsulated in a mp4 container. MPEG-4 Part 14 or mp4 is a digital multimedia container format most commonly used to store video and audio. Using script presented in the listing, we created different representations. Description of all representations is presented in the table \ref{tab:repr}.
+
+\begin{table}
+\centering
+\begin{tabular}{c|c|c}
+Representation ID & Resolution [px x px] & Bitrate [Mbps] \\\hline
+1 & 1280 x 720 & 5 \\
+2 & 1280 x 720 & 10 \\
+3 & 1920 x 1080 & 15 \\
+4 & 1920 x 1080 & 20 \\
+5 & 1920 x 1080 & 25 \\
+\end{tabular}
+\caption{\label{tab:repr}The different representations of the encoded video.}
+\end{table}
+
+We choose this range of bitrates because we want to be sure that we will use different representations during the streaming depending on that if we use only LTE or WiFi and LTE in parallel. After we created all representations, the next step was to "dashify" the content so it is appropriate for the DASH protocol. For that purpose we used MP4Box\footnote{MP4Box \url{https://gpac.wp.imt.fr/mp4box/}}, multimedia packager available in GPAC. It is used for performing  manipulations on multimedia files like AVI, MPG, TS, but mostly on ISO media files (e.g. MP4, 3GP). In the following listing is presented a command used for "dashifying" content.
+
+\begin{lstlisting}[language=bash, caption={\label{l:command}Command for dashyfing content using MP4Box.}, captionpos=b]
+
+MP4Box -dash ts -frag ts -rap -out DASHFILE.mpd 
+-profile live VIDEO_QUALITY1.mp4 VIDEO_QUALITY2.mp4 ...
+\end{lstlisting} 
+
+The most important file of previous process is \emph{DASHFILE.mpd}, created manifest, which is needed for the stream itself. Media presentation description (MPD) describes segment information. It is an XML document describing where the various media resources present in the content are located. The segment is  a continuous part of a media resource. The segment is the smallest part of the media that can be located in the MPD. All produced content, including the MPD manifest, we store on the university Apache server. After that we were able to run the experiment and measure data.
+
+For playing the video, we used MP4Client\footnote{MP4Client \url{https://gpac.wp.imt.fr/player/}}. It is provided by GPAC\footnote{GPAC \url{https://gpac.wp.imt.fr/}} and it is a highly configurable multimedia player. It can be used from a command-line, as a GUI or browser plugin. In our experiment we used it from command-line, running the command presented in the following listing.
+
+\begin{lstlisting}[language=bash, caption={\label{l:cmd}Command for running MP4Client player.}, captionpos=b]
+
+MP4Client <server_address>/DASHFILE.mpd
+
+\end{lstlisting} 
+
+We used Wireshark for capturing the data. In the second experiment, we had only one scenario where LTE and WiFi were active from the beginning. After 20 seconds, we turned off WiFi and after 20 seconds, turned on WiFi. 
 
 %Analyze your data with respect to the aim of the experiment. Your task during the experiment is not just to measure and document your measurements, but to derive and present conclusions from your measurements. If there are some errors in the final results. Investigate and try to understand all types and sources of errors in all your measurements.
 \section{Results and Analsys}
@@ -62,19 +127,19 @@ As it was mentioned in the previous section, for the first part of the project w
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{result1.png}
+\includegraphics[width=1.0\textwidth]{result1.png}
 \caption{\label{fig:r1} Graphic representing the MPTCP throughput when WiFi is turned off after 10 sec.}
 \end{figure}
 
-In the figure \ref{fig:r1} is presented throughput in the scenario when we have in parallel WiFi and LTE from the beginning of the experiment. After 10 seconds, we turned off WiFi. As we can see from the graphic, LTE continues to work but total throughput becomes lower and equal as LTE throughput. After 10 seconds, we had again turned WiFi on and it can be seen clearly on the figure that we have some WiFi throughput after 20 seconds. The maximal total throughput achieved in this scenario is around 24 Mbit/s.
+In the figure \ref{fig:r1} is presented throughput in the scenario when we have in parallel WiFi and LTE from the beginning of the experiment. After 10 seconds, we turned off WiFi. As we can see from the graphic, LTE continues to work but total throughput becomes lower and equal as LTE throughput. After 10 seconds, we had again turned WiFi on and it can be seen clearly on the figure that we have some WiFi throughput after 20 seconds. The maximal total throughput achieved in this scenario is around 24 Mbps.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{result2.png}
+\includegraphics[width=1.0\textwidth]{result2.png}
 \caption{\label{fig:r2} Graphic representing the MPTCP throughput when WiFi is turned on after 10 sec.}
 \end{figure}
 
-In the figure \ref{fig:r2} is presented throughput in the scenario when only LTE is turned on from the beginning of the experiment. After 10 seconds, WiFi is turned on. From the graphic we can see that there is increase of total throughput when WiFi is on. The maximal total throughput achieved in this scenario is around 28 Mbit/s.
+In the figure \ref{fig:r2} is presented throughput in the scenario when only LTE is turned on from the beginning of the experiment. After 10 seconds, WiFi is turned on. From the graphic we can see that there is increase of total throughput when WiFi is on. The maximal total throughput achieved in this scenario is around 28 Mbps.
 
 The interesting observation from both graphics is that in the moment when the WiFi is again turned on, we have decrease of the LTE throughput. Reason for this could be specific MPTCP protocol implementation but we can not claim this with great certainty.
 
@@ -83,8 +148,6 @@ The interesting observation from both graphics is that in the moment when the Wi
 %Summarize and discuss your results with respect to the literature or your own scientific expectations. You should in particular discuss possible error sources and give a short judgment on the quality of the experimental setup (because you also learn to design the measurement setups). If needed, suggest how to improve the setups.
 \section{Conclusions}
 After running the several experiments of our setup, we can conclude that combination of Multipath TCP and DASH improves data throughput and Quality of Experience in video streaming as it was expected. We would like to mention that documentation and tutorials for setting up MPTCP Linux Kernel \cite{linuxMPTCP} are very poor and not very helpful. Because of that we are very thankful to Dr. Eryk Schiller for helping us with setting everything up. 
-
-Conclusions about DASH are the following. Shorter segments may provide a larger overhead in term of requests and result in more quality switches, with the cost of a lower encoding efficiency. On the other hand longer segments are not very handy in environments with high bandwidth fluctuations like mobile networks, because the client cannot adjust the video stream as fast as it would be needed in case of a significant bandwidth drop.
 
 
 %The bibliography, done here without a bib file
