@@ -143,11 +143,28 @@ In the figure \ref{fig:r2} is presented throughput in the scenario when only LTE
 
 The interesting observation from both graphics is that in the moment when the WiFi is again turned on, we have decrease of the LTE throughput. Reason for this could be specific MPTCP protocol implementation but we can not claim this with great certainty.
 
-% @Pascal can you add few sentences about problems we had in first attempts? 
+ HERE ADD GRAPHIC OF TEST 2 BECAUSE IT IS MORE PRECISE AND PARAGRAPH DESCRIBING IT
+ ...
+\newpage
+In the following is presented a graphic showing the change of the buffer size during the video streaming. In the figure \ref{fig:buffer2} we can see that at the beginning we are using the lowest representation but after the few seconds we came to the representation 3 because we have WiFi and LTE working in parallel. Significant drop on the graphic is because it is a moment when WiFi was turned off, so it has to adjust to new network conditions and continue playing the lowest representation. After 20 seconds, we again turned on WiFi and we can see that higher representations are used again. 
+
+ 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{buffer-test-2.png}
+\caption{\label{fig:buffer2} Graphic representing the change of buffer size during the experiment.}
+\end{figure}
+
 
 %Summarize and discuss your results with respect to the literature or your own scientific expectations. You should in particular discuss possible error sources and give a short judgment on the quality of the experimental setup (because you also learn to design the measurement setups). If needed, suggest how to improve the setups.
 \section{Conclusions}
-After running the several experiments of our setup, we can conclude that combination of Multipath TCP and DASH improves data throughput and Quality of Experience in video streaming as it was expected. We would like to mention that documentation and tutorials for setting up MPTCP Linux Kernel \cite{linuxMPTCP} are very poor and not very helpful. Because of that we are very thankful to Dr. Eryk Schiller for helping us with setting everything up. 
+The two main problems of the streaming video content are quality and buffering. For example, video that is only 1280 x 720 will never play at correct quality levels on a screen that is 1920 x 1080 px, it will be stretched. Second thing is  buffering. If the users has a poor quality internet connection, and cannot download the video stream quickly enough, then the video will need to pause, wait for more data, and then start again. This makes watching a video horrible for the user. Solution for this problem is adaptive streaming. 
+
+Adaptive streaming allowed us to create a different video representations so we can stream a specific video file ensuring that the viewer always receives a video that will look good. Because adaptive streaming adapts to the speed of the user’s internet connection, we avoided pausing the video because of the buffering.
+
+In our experiment we came to the conclusion that using WiFi when is available, improves the quality of experience very much. It allows user to watch video in higher resolution without pausing and waiting to buffer more data. 
+
+In addition, we would like to thank Dr. Eryk Schiller for helping us with setting everything up. 
 
 
 %The bibliography, done here without a bib file
