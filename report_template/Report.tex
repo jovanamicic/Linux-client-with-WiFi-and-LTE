@@ -48,11 +48,11 @@ We downloaded, compiled and installed the kernel on two linux machines. One late
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{setup.png}
+\includegraphics[width=0.8\textwidth]{setup.png}
 \caption{\label{fig:setup} Hardware setup used for the experiments.}
 \end{figure}
 
-Both computers needed at least two network interfaces. The client was equipped with a wireless network card for the WiFi connection and for the connection over LTE we used a USB dongle. On the serverside a custom WiFi access point was created with the help of hostapd \footnote{hostapd \url{http://w1.fi/hostapd/}}. to which the client connected. In addition, the server needs to be connected with an LTE antenna. To our luck this computer was already set up for this task and had all necessary LTE components such as the Home Subscriber Server (HSS), Mobility Management Entity (MME), Serving Gateway (S-GW) and PDN Gateway (P-GW). Among some minor diffuculties regarding the establishment of the LTE connection (presumably
+Both computers needed at least two network interfaces. The client was equipped with a wireless network card for the WiFi connection and for the connection over LTE we used a USB dongle. On the serverside a custom WiFi access point was created with the help of hostapd \footnote{hostapd \url{http://w1.fi/hostapd/}} to which the client connected. In addition, the server needs to be connected with an LTE antenna. To our luck this computer was already set up for this task and had all necessary LTE components such as the Home Subscriber Server (HSS), Mobility Management Entity (MME), Serving Gateway (S-GW) and PDN Gateway (P-GW). Among some minor diffuculties regarding the establishment of the LTE connection (presumably
  due to a poor LTE dongle) everything was set up and ready for testing.\\
 
 In the first part of our experiment we just tested throughput of the data without video streaming. We had two different scenarios:
@@ -134,7 +134,7 @@ We used Wireshark for capturing the data. In the second experiment, we had only 
 \section{Results and Analsys}
 As it was mentioned in the previous section, for the first part of the project we measure data throughput for the two case scenarios. In the following text we will present results we got from this experiments.
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=1.0\textwidth]{result1.png}
 \caption{\label{fig:r1} Graphic representing the MPTCP throughput when WiFi is turned off after 10 sec.}
@@ -142,7 +142,7 @@ As it was mentioned in the previous section, for the first part of the project w
 
 In the figure \ref{fig:r1} is presented throughput in the scenario when we have in parallel WiFi and LTE from the beginning of the experiment. After 10 seconds, we turned off WiFi. As we can see from the graphic, LTE continues to work but total throughput becomes lower and equal as LTE throughput. After 10 seconds, we had again turned WiFi on and it can be seen clearly on the figure that we have some WiFi throughput after 20 seconds. The maximal total throughput achieved in this scenario is around 24 Mbps.
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=1.0\textwidth]{result2.png}
 \caption{\label{fig:r2} Graphic representing the MPTCP throughput when WiFi is turned on after 10 sec.}
@@ -151,6 +151,7 @@ In the figure \ref{fig:r1} is presented throughput in the scenario when we have 
 In the figure \ref{fig:r2} is presented throughput in the scenario when only LTE is turned on from the beginning of the experiment. After 10 seconds, WiFi is turned on. From the graphic we can see that there is increase of total throughput when WiFi is on. The maximal total throughput achieved in this scenario is around 28 Mbps.
 
 The interesting observation from both graphics is that in the moment when the WiFi is again turned on, we have decrease of the LTE throughput. Reason for this could be specific MPTCP protocol implementation but we can not claim this with great certainty.
+
  
 \begin{figure}[H]
 \centering
@@ -158,7 +159,7 @@ The interesting observation from both graphics is that in the moment when the Wi
 \caption{\label{fig:videotest2} Throughput of MPTCP over LTE and WiFi.}
 \end{figure} 
  
-Figure \ref{fig:videotest2} shows the throughput of both network interfaces during a DASH video streaming test. At the start both interface are active and after 20 seconds WiFi was turned off (to simulate a signal loss) and around 25 seconds later on it was turned back on again. The graph shows a throughput around a relatively constant 3 Mbps. For the WiFi interface the throughput is around 12 Mbps while it is active. Overall this sums up to a total throughput around 15 Mbps.
+Figure \ref{fig:videotest2} shows the throughput of both network interfaces during a DASH video streaming test. At the start both interface are active and after 20 seconds WiFi was turned off (to simulate a signal loss) and around 20 seconds later on it was turned back on again. The graph shows a throughput around a relatively constant 3 Mbps. For the WiFi interface the throughput is around 12 Mbps while it is active. Overall this sums up to a total throughput around 15 Mbps.
 
 %\newpage
 In the following is presented a graphic showing the change of the buffer size during the video streaming. In the figure \ref{fig:buffer2} we can see that at the beginning we are using the lowest representation but after the few seconds we came to the representation 3 because we have WiFi and LTE working in parallel. Significant drop on the graphic is because it is a moment when WiFi was turned off, so it has to adjust to new network conditions and continue playing the lowest representation. After 20 seconds, we again turned on WiFi and we can see that higher representations are used again. 
@@ -170,16 +171,21 @@ In the following is presented a graphic showing the change of the buffer size du
 \caption{\label{fig:buffer2} Graphic representing the change of buffer size during the experiment.}
 \end{figure}
 
+Interesting observation in this case is that we never used representations 4 and 5. It is because we never reached bandwidth larger than 20 Mbps. Representation 4 has bitrate of 20 Mbps and representation 5 has 25 Mbps. Maybe if we run more experiments, it could happen to have larger total bandwidth, so it could use representations 4 and 5.
+
 
 %Summarize and discuss your results with respect to the literature or your own scientific expectations. You should in particular discuss possible error sources and give a short judgment on the quality of the experimental setup (because you also learn to design the measurement setups). If needed, suggest how to improve the setups.
+\newpage
 \section{Conclusions}
 The two main problems of the streaming video content are quality and buffering. For example, video that is only 1280 x 720 will never play at correct quality levels on a screen that is 1920 x 1080 px, it will be stretched. Second thing is  buffering. If the users has a poor quality internet connection, and cannot download the video stream quickly enough, then the video will need to pause, wait for more data, and then start again. This makes watching a video horrible for the user. Solution for this problem is adaptive streaming. 
 
 Adaptive streaming allowed us to create a different video representations so we can stream a specific video file ensuring that the viewer always receives a video that will look good. Because adaptive streaming adapts to the speed of the user’s internet connection, we avoided pausing the video because of the buffering.
 
-In our experiment we came to the conclusion that using WiFi when is available, improves the quality of experience very much. It allows user to watch video in higher resolution without pausing and waiting to buffer more data. 
+In our experiment we came to the conclusion that using WiFi when is available, improves the quality of experience very much. It allows user to watch video in higher resolution without pausing and waiting to buffer more data. But still, this approach is not so widely supported. We had difficulties to find appropriate resources and tutorials. Setting up this configuration would be very hard if we did not have help of Dr. Eryk Schiller, so we would like to thank him for helping us with setting everything up. 
 
-In addition, we would like to thank Dr. Eryk Schiller for helping us with setting everything up. 
+The best achievement is that we have proven by our measurements that  the change of representation is actually happening, as it can be see on the figure \ref{fig:buffer2}. Comparing to the figure \ref{fig:videotest2}, we see that at the beginning, in the first 20 seconds, when the total throughput is between 10 and 18 Mbps, it use representations 2 and 3. After turning off WiFi, it uses only the lowest, representation 1. It is because total throughput was below 5 Mbps. In this way, user did not experience buffering of the video, because segments were already loaded in the buffer and lower representation is used. After we turned on WiFi again, we have increase of total throughput and change of the representation, higher representations are used again. 
+
+There are still some open questions we found out during this research. One of the question is the moment when we turn on WiFi. In that moment, we have the decrease of the LTE throughput. We suppose that it has something to do with the MPTCP protocol implementation. This could be a interesting task for some further research.
 
 
 %The bibliography, done here without a bib file
@@ -195,9 +201,6 @@ Michalos, M. G., S. P. Kessanidis, and S. L. Nalmpantis. \emph{"Dynamic Adaptive
 
 \bibitem{linuxMPTCP}
 C. Paasch, S. Barre, et al.. \emph{Multipath TCP in the Linux Kernel}. Available from \url{http://www.multipath-tcp.org}.
-
-\bibitem{dataset}
-Stefan Lederer, Christopher Müller and Christian Timmerer, \emph{“Dynamic Adaptive Streaming over HTTP Dataset”}, In Proceedings of the ACM Multimedia Systems Conference 2012, Chapel Hill, North Carolina, February 22-24 (2012). 
 
 %\bibitem{VLC}
 %\emph{VLC player}. Available from \url{download.videolan.org/pub/videolan/vlc/2.1.0/}.
